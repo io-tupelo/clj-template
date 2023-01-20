@@ -1,0 +1,202 @@
+
+= Clojure Template Project
+
+A simple template for Clojure projects
+
+== Overview
+
+This Clojure project shows my favorite layout of for both source & test files
+(sample Java source is included as well).  The project is also set-up to use the
+https://github.com/cloojure/tupelo[Tupelo Clojure] library and the
+https://github.com/jakemcc/lein-test-refresh[lein-test-refresh] plugin.
+
+== How to User This Project
+
+To use this project, we assume you have already installed Java, Clojure, and Leiningen, and `git`.
+
+=== Clone the Project Using Git
+
+Verify you have Git installed:
+
+```bash
+> git --version
+git version 2.25.0
+```
+
+Use `git` to clone the project (via SSH) into a new project names `demo`:
+```bash
+> git clone  git@github.com:io-tupelo/clj-template.git  demo  # git ssh URL
+```
+
+or, clone via HTTPS (if you don't have SSH set up on your computer & GitHub):
+```bash
+> git clone  https://github.com/io-tupelo/clj-template.git  demo  # git https URL
+```
+
+Then `cd` (change directory) into the new project:
+
+```bash
+> cd demo
+```
+
+=== Verify you have Java, Clojure, and Leiningen set up correctly
+
+Try the following commands, and make sure you get similar output:
+
+```bash
+> java --version
+java 13 2019-09-17
+Java(TM) SE Runtime Environment (build 13+33)
+Java HotSpot(TM) 64-Bit Server VM (build 13+33, mixed mode, sharing)
+
+> lein --version
+Leiningen 2.9.1 on Java 13 Java HotSpot(TM) 64-Bit Server VM
+```
+
+== Running Unit Tests - Plain
+
+```pre
+> lein clean
+> lein test
+```
+
+with result:
+
+```pre
+lein test _bootstrap
+-------------------------------
+   Clojure 1.10.1    Java 13
+-------------------------------
+
+lein test tst.demo.core
+result => "Hello, World!\n"
+
+Ran 4 tests containing 6 assertions.
+0 failures, 0 errors.
+```
+
+I do the above so often that I have a Bash/Zsh alias set up:
+
+```bash
+alias lct="time (lein do clean, test)"       # lct => Lein Clean Test
+```
+
+== Running Unit Tests with `lein test-refresh`
+
+IMHO, https://github.com/jakemcc/lein-test-refresh[the lein-test-refresh project] provides the best way of doing
+iterative development in Clojure, re-running unit tests every time you save a source file from the editor.
+
+```pre
+> lein test-refresh
+```
+
+or make an alias:
+
+```bash
+alias lctr="lein do clean, test-refresh"    # lctr => Lein Clean Test-Refresh
+```
+
+with result:
+
+```pre
+Testing _bootstrap
+-------------------------------
+   Clojure 1.10.1    Java 13
+-------------------------------
+
+Testing tst.demo.core
+result => "Hello, World!\n"
+
+Ran 4 tests containing 6 assertions.
+0 failures, 0 errors.
+
+Passed all tests
+Finished at 07:56:48.252 (run time: 6.709s)
+...
+```
+
+in this instance, the test output pauses after printing the elapsed time, and waits to re-run
+upon any file change. For example, make a simple change in the namespace `demo.core`  by adding
+the word "Again!" to the `println` expression, and watch as the tests are automatically re-run:
+
+```pre
+...
+Testing tst.demo.core
+result => "Hello, World! Again!\n"
+...
+Finished at 07:59:53.863 (run time: 0.034s)
+```
+
+Note that the tests were all re-run in only 34 milliseconds (nearly instantaneous), since the JVM was already
+started and Clojure itself (plus library code) has already been compiled.
+
+=== Using "Focus" Mode
+
+Change one of the `dotest` forms in `tst.demo.core` to `dotest-focus`.  If there is at least one `dotest-focus` present
+in the project, then ***only*** the "focus" tests will be run.  This is helpful when you want to
+temporarily focus on a specific feature, without the distraction of all the other tests runnning.
+
+Note that only `lein test-refresh` (i.e. `lctr`) will honor the `focus` mode; `lein test` (i.e. `lct`) will always run all tests.
+
+== Keeping Dependency Versions Up-To-Date
+
+This project includes the `lein-ancient` plugin, which will tell you if any of your dependency
+libraries are out of date. I have an alias:
+
+```bash
+alias laca="lein ancient check :all"
+```
+
+which will give you a list of version updates you should make, or just
+
+```pre
+all artifacts are up-to-date.
+```
+
+if you are already up-to-date on everything.
+
+== Plumatic Schema
+
+The function `demo.core/add2` shows the usage of https://github.com/plumatic/schema[Plumatic Schema] to document
+function argument types and return value type.  This is a lifesaver!
+
+== Documentation
+
+- The https://github.com/cloojure/tupelo[Tupelo Clojure] library on GitHub
+- The Tupelo Clojure https://cljdoc.org/d/tupelo/tupelo/0.9.183/doc/readme[API Docs] on cljdoc.org
+- The https://clojure.org/api/cheatsheet[Clojure CheatSheet].  Always have a browser tab open here,
+  and **__study frequently!__**
+- The https://cljs.info/cheatsheet[ClojureScript CheatSheet].  **__Another great resource!__**
+- The above links to examples on http://clojuredocs.org/[ClojureDocs.org]
+- Also see http://clojure-doc.org/[Clojure-Doc.org] (similar name, different website!)
+- API Documentation for most any Clojure library can be found link:https://cljdoc.org/[at cljdoc.org]
+- The online book https://www.braveclojure.com/[Brave Clojure].  Be sure to also buy a copy!
+- The book https://pragprog.com/book/roclojure/getting-clojure[Getting Clojure]
+- The book https://www.oreilly.com/library/view/living-clojure/9781491909270/[Living Clojure]
+- The https://github.com/clojure-cookbook/clojure-cookbook[Clojure Cookbook]
+- The https://www.clojure-toolbox.com/[Clojure Toolbox] has a large list of libraries you can use
+- https://clojure.org/[Clojure.org] and https://clojurescript.org[ClojureScript.org] - the mothership
+
+== License
+
+Copyright © 2020  Alan Thompson
+
+Distributed under the link:https://www.eclipse.org/legal/epl-v10.html[Eclipse Public License], the same as Clojure.
+
+== Development Environment
+
+Developed using link:https://www.jetbrains.com/idea/[*IntelliJ IDEA*] 
+with the link:https://cursive-ide.com/[*Cursive* Clojure plugin].
+
+image:resources/intellij-idea-logo-400.png[IntelliJ,200,200]
+
+image:resources/cursive-logo-300.png[Cursive]
+
+YourKit supports open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of
+link:https://www.yourkit.com/java/profiler/[YourKit Java Profiler]
+and link:https://www.yourkit.com/.net/profiler/[YourKit .NET Profiler],
+innovative and intelligent tools for profiling Java and .NET applications.
+
+image:https://www.yourkit.com/images/yklogo.png[YourKit,400,400]
+
