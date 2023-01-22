@@ -14,11 +14,12 @@
  :aliases {
            :run  {:exec-fn demo.core/-main
                   }
-           :test         {:extra-paths ["test/clj"]
+           :test         {:extra-paths ["src/clj"]
                           :extra-deps  {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
                           :main-opts   ["-m" "cognitect.test-runner"]
                           :exec-fn     cognitect.test-runner.api/test
-                          :exec-args  {:patterns ["tst.*"]
+                          :exec-args  {:dirs ["src/clj"] ; mandatory to control test dirs searched
+                                       :patterns ["tst.*"]
                                        }
                           }
            :test-refresh {:extra-paths ["test/clj"]

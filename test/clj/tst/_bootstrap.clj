@@ -1,4 +1,4 @@
-(ns _bootstrap
+(ns tst._bootstrap
   "This namespace is used to perform one-time tasks at the beginning of a test run,
    such as printing the Clojure version."
   (:use tupelo.test)
