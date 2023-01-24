@@ -24,8 +24,9 @@
            :test-refresh {:extra-deps {com.jakemccrary/test-refresh {:mvn/version "0.25.0"}}
                           :main-opts  ["-m" "com.jakemccrary.test-refresh" "--dir" "src"]
                           }
-
            :old          {; Note that it is `:deps`, not `:extra-deps`
                           :deps      {com.github.liquidz/antq {:mvn/version "RELEASE"}}
-                          :main-opts ["-m" "antq.core"]}
-           }}
+                          :main-opts ["-m" "antq.core"]
+                          }
+           }
+ }
