@@ -13,7 +13,5 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  ; (println "-main - enter")
-  (println "Hello, World! Again!")
-  ; (println "-main - leave")
-  )
+  (println "-main - enter")
+  (println "-main - leave"))

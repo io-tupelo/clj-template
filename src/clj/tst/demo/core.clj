@@ -6,7 +6,5 @@
 
 (verify
   (is= 5 (add2 2 3))
-  (is (truthy? "foo"))
   )
-
 

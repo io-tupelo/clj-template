@@ -2,13 +2,13 @@
            "target/java" ; compiled Java *.class files
            ]
  :deps    {
-           ;cambium/cambium.codec-simple {:mvn/version "0.9.3"}
-           ;cambium/cambium.core         {:mvn/version "0.9.3"}
-           ;cambium/cambium.logback.core {:mvn/version "0.4.3"}
+           cambium/cambium.codec-simple {:mvn/version "1.0.0"}
+           cambium/cambium.core         {:mvn/version "1.1.1"}
+           cambium/cambium.logback.core {:mvn/version "0.4.5"}
 
-           org.clojure/clojure {:mvn/version "1.11.1"}
-           prismatic/schema    {:mvn/version "1.3.5"}
-           tupelo/tupelo       {:mvn/version "22.08.03"}
+           org.clojure/clojure          {:mvn/version "1.11.1"}
+           prismatic/schema             {:mvn/version "1.4.1"}
+           tupelo/tupelo                {:mvn/version "22.08.03"}
            }
 
  :aliases {
@@ -24,4 +24,8 @@
            :test-refresh {:extra-deps {com.jakemccrary/test-refresh {:mvn/version "0.25.0"}}
                           :main-opts  ["-m" "com.jakemccrary.test-refresh" "--dir" "src"]
                           }
+
+           :old          {; Note that it is `:deps`, not `:extra-deps`
+                          :deps      {com.github.liquidz/antq {:mvn/version "RELEASE"}}
+                          :main-opts ["-m" "antq.core"]}
            }}
