@@ -1,46 +1,75 @@
 {:paths   [
-           "src/clj" ; Clojure source files
-           "src/cljc" ; Clojure source files
-         ; "src/cljs" ; ClojureScript source files
-           "test/clj" ; Clojure source files
-           "test/cljc" ; Clojure source files
-         ; "test/cljs" ; ClojureScript source files
-           "target/java" ; compiled Java *.class files
+           "src" ; Clojure source files
+           "test" ; Clojure source files
+           ; "target/java" ; compiled Java *.class files
            ]
  :deps    {
-           ; cambium/cambium.codec-simple {:mvn/version "1.0.0"}
-           ; cambium/cambium.core         {:mvn/version "1.1.1"}
-           ; cambium/cambium.logback.core {:mvn/version "0.4.5"}
-
-           org.clojure/clojure          {:mvn/version "1.11.1"}
-           prismatic/schema             {:mvn/version "1.4.1"}
-           tupelo/tupelo                {:mvn/version "22.08.03"}
+           org.clojure/clojure {:mvn/version "1.11.1"}
+           prismatic/schema    {:mvn/version "1.4.1"}
+           tupelo/tupelo       {:mvn/version "22.08.03"}
            }
 
  :aliases {
-           :run          {:exec-fn demo.core/-main
+           :test         {:extra-deps  {io.github.cognitect-labs/test-runner
+                                        #_{:git/tag "v0.5.1" :git/sha "dfb30dd"}
+                                        {:local/root "/home/alan/gh/test-runner"}
+                                        }
+                          :extra-paths ["test/resources"]
+                          :main-opts   ["-m" "cognitect.test-runner"]
+                          :exec-fn     cognitect.test-runner.api/test
+                          :exec-args   {:patterns ["^tst.*"] ; mandatory to detect testing ns's like `tst.demo.core`
+                                        }
                           }
-           :test         {:extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
-                          :main-opts  ["-m" "cognitect.test-runner"]
-                          :exec-fn    cognitect.test-runner.api/test
-                          :exec-args  {
-                                     ; :dirs       [; mandatory to control test dirs searched
-                                     ;              "src/clj"
-                                     ;              "src/cljc"
-                                     ;              "test/clj"
-                                     ;              "test/cljc" 
-                                     ;             ]
-                                       :patterns ["tst.*"] ; mandatory to detect testing ns's like `tst.demo.core`
-                                       }
-                          }
-           :test-refresh {:extra-deps {com.jakemccrary/test-refresh {:mvn/version "0.25.0"}}
-                          :main-opts  ["-m" "com.jakemccrary.test-refresh" 
-                                       "--dir" "test"
-                                       ]
+           :test-refresh {:extra-paths ["test/resources"]
+                          :extra-deps  {com.jakemccrary/test-refresh {:mvn/version "0.25.0"}}
+                          :main-opts   ["-m" "com.jakemccrary.test-refresh"
+                                        ; "--dir" "test"  ; <= default
+                                        ]
                           }
            ; This target finds dependencies with outdated version numbers
-           :old          {:deps      {com.github.liquidz/antq {:mvn/version "RELEASE"}}  ; NOT `:extra-deps` !!!
+           :old          {:deps      {com.github.liquidz/antq {:mvn/version "RELEASE"}} ; NOT `:extra-deps` !!!
                           :main-opts ["-m" "antq.core"]
+                          }
+           ; build alias (for deployment)
+           :build        {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.4"}
+                                       slipset/deps-deploy           {:mvn/version "RELEASE"}
+
+                                       tupelo/tupelo                 {:local/root "."}
+                                       }
+                          :ns-default build}
+
+           ; vvv Implicitly controls ClojureScript version
+           :shadow-cljs  {:extra-deps {thheller/shadow-cljs {:mvn/version "2.22.9"}}
+                          :main-opts  ["-m" "shadow.cljs.devtools.cli"]
                           }
            }
  }
+
+#_(do
+    :aliases {
+              :run          {:exec-fn demo.core/-main
+                             }
+              :test         {:extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                             :main-opts  ["-m" "cognitect.test-runner"]
+                             :exec-fn    cognitect.test-runner.api/test
+                             :exec-args  {
+                                          ; :dirs       [; mandatory to control test dirs searched
+                                          ;              "src/clj"
+                                          ;              "src/cljc"
+                                          ;              "test/clj"
+                                          ;              "test/cljc"
+                                          ;             ]
+                                          :patterns ["tst.*"] ; mandatory to detect testing ns's like `tst.demo.core`
+                                          }
+                             }
+              :test-refresh {:extra-deps {com.jakemccrary/test-refresh {:mvn/version "0.25.0"}}
+                             :main-opts  ["-m" "com.jakemccrary.test-refresh"
+                                          "--dir" "test"
+                                          ]
+                             }
+              ; This target finds dependencies with outdated version numbers
+              :old          {:deps      {com.github.liquidz/antq {:mvn/version "RELEASE"}} ; NOT `:extra-deps` !!!
+                             :main-opts ["-m" "antq.core"]
+                             }
+              })
+
