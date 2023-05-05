@@ -39,7 +39,7 @@ Then `cd` (change directory) into the new project:
 > cd demo
 ```
 
-=== Verify you have Java, Clojure, and Leiningen set up correctly
+=== Verify you have Java & Clojure set up correctly
 
 Try the following commands, and make sure you get similar output:
 
@@ -49,69 +49,86 @@ java 13 2019-09-17
 Java(TM) SE Runtime Environment (build 13+33)
 Java HotSpot(TM) 64-Bit Server VM (build 13+33, mixed mode, sharing)
 
-> lein --version
-Leiningen 2.9.1 on Java 13 Java HotSpot(TM) 64-Bit Server VM
+> clojure --version
+Clojure CLI version 1.11.1.1208
+> clj --version
+Clojure CLI version 1.11.1.1208
 ```
 
 == Running Unit Tests - Plain
 
+I use the alias `ct` for "clojure-test" and `ctr` fr "clojure-test-refresh". You can copy that or just cut/paste
+the actual commands echoed below.
+
+Simple way:
 ```pre
-> lein clean
-> lein test
-```
+> clojure -X:test
 
-with result:
+Running tests in #{"test"}
 
-```pre
-lein test _bootstrap
--------------------------------
-   Clojure 1.10.1    Java 13
--------------------------------
+Testing tst._bootstrap
 
-lein test tst.demo.core
-result => "Hello, World!\n"
+------------------------------------------
+   Clojure 1.12.0-alpha3    Java 19.0.2
+------------------------------------------
 
-Ran 4 tests containing 6 assertions.
+Testing tst.demo.core
+
+Ran 2 tests containing 5 assertions.
 0 failures, 0 errors.
 ```
 
-I do the above so often that I have a Bash/Zsh alias set up:
+With the alias:
+```pre
+> ct
+time (clojure -X:test)    # <= the alias echos the actual command
 
-```bash
-alias lct="time (lein do clean, test)"       # lct => Lein Clean Test
+Running tests in #{"test"}
+
+Testing tst._bootstrap
+
+------------------------------------------
+   Clojure 1.12.0-alpha3    Java 19.0.2
+------------------------------------------
+
+Testing tst.demo.core
+
+Ran 2 tests containing 5 assertions.
+0 failures, 0 errors.
+  27.82s user 0.82s system 326% cpu 8.776 total
 ```
 
-== Running Unit Tests with `lein test-refresh`
+== Running Unit Tests with `test-refresh`
 
 IMHO, https://github.com/jakemcc/lein-test-refresh[the lein-test-refresh project] provides the best way of doing
 iterative development in Clojure, re-running unit tests every time you save a source file from the editor.
 
 ```pre
-> lein test-refresh
+> clojure -M:test-refresh
 ```
 
-or make an alias:
-
-```bash
-alias lctr="lein do clean, test-refresh"    # lctr => Lein Clean Test-Refresh
-```
-
-with result:
+or make an alias `ctr`, with result:
 
 ```pre
-Testing _bootstrap
--------------------------------
-   Clojure 1.10.1    Java 13
--------------------------------
+> ctr
+time (clojure -M:test-refresh)
+*********************************************
+*************** Running tests ***************
+:reloading (demo.core tst._bootstrap tst.demo.core)
+
+Testing tst._bootstrap
+
+------------------------------------------
+   Clojure 1.12.0-alpha3    Java 19.0.2
+------------------------------------------
 
 Testing tst.demo.core
-result => "Hello, World!\n"
 
-Ran 4 tests containing 6 assertions.
+Ran 2 tests containing 5 assertions.
 0 failures, 0 errors.
 
 Passed all tests
-Finished at 07:56:48.252 (run time: 6.709s)
+Finished at 15:17:49.395 (run time: 5.327s)
 ...
 ```
 
@@ -140,17 +157,24 @@ Note that only `lein test-refresh` (i.e. `lctr`) will honor the `focus` mode; `l
 
 == Keeping Dependency Versions Up-To-Date
 
-This project includes the `lein-ancient` plugin, which will tell you if any of your dependency
-libraries are out of date. I have an alias:
+This `deps.edn` includes the `old` alias, which will tell you if any of your dependency
+libraries are out of date. I have a BASH alias:
 
 ```bash
-alias laca="lein ancient check :all"
+> which cold
+cold () {
+	evalEcho 'time (clojure -M:old)'
+}
 ```
 
 which will give you a list of version updates you should make, or just
 
 ```pre
-all artifacts are up-to-date.
+> cold
+time (clojure -M:old)
+[##################################################] 6/6
+All dependencies are up-to-date.
+  28.14s user 0.67s system 370% cpu 7.782 total
 ```
 
 if you are already up-to-date on everything.
