@@ -13,6 +13,6 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (prn ":main--enter")
+  (spy :main--enter)
   (spyx args)
-  (prn ":main--leave"))
+  (spy :main--leave))
