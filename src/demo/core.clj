@@ -1,8 +1,8 @@
 (ns demo.core
   (:use tupelo.core)
   (:require
-    [schema.core :as s])
-  (:gen-class))
+    [schema.core :as s]
+    ))
 
 (s/defn add2 :- s/Num
   "An example to demonstrate Plumatic Schema."
